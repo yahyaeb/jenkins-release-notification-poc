@@ -27,7 +27,15 @@ Jenkins: ${env.BUILD_URL}' \\
 
 pipeline {
     agent any
-
+    stage('Inspect PR Metadata') {
+        steps {
+            echo "CHANGE_ID: ${env.CHANGE_ID}"
+            echo "CHANGE_AUTHOR: ${env.CHANGE_AUTHOR}"
+            echo "CHANGE_TARGET: ${env.CHANGE_TARGET}"
+            echo "CHANGE_URL: ${env.CHANGE_URL}"
+            echo "BRANCH_NAME: ${env.BRANCH_NAME}"
+        }
+    }
     stages {
 
         stage('Parallel Validations') {
