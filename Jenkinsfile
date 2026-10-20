@@ -11,6 +11,17 @@ pipeline {
                         echo 'Unit Tests completed'
                     }
                 }
+                
+                stage('Unit Tests') {
+                    steps {
+                        echo 'Starting Unit Tests'
+                        sleep time: 15, unit: 'SECONDS'
+
+                        echo 'ERROR: Synthetic unit test failure'
+
+                        error('Unit Tests validation failed')
+                    }
+                }
 
                 stage('Integration Tests') {
                     steps {
