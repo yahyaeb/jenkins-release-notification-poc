@@ -21,6 +21,33 @@ pipeline {
 
                         error('Unit Tests validation failed')
                     }
+                    post {
+    failure {
+        echo 'Sending immediate SRE notification...'
+
+        script {
+            def status = sh(
+                            script: '''
+                                curl --fail --silent --show-error \
+                                    --max-time 5 \
+                                    --retry 0 \
+                                    -H "Title: Jenkins Validation Failure" \
+                                    -H "Priority: high" \
+                                    -H "Tags: warning" \
+                                    -d "Validation: Unit Tests failure 2
+            Build: ${BUILD_NUMBER}
+            Jenkins: ${BUILD_URL}" \
+                                    https://ntfy.sh/jenkins-demo-8f72a91c4e63b2
+                            ''',
+                            returnStatus: true
+                        )
+
+                        if (status != 0) {
+                            echo "WARNING: ntfy notification failed (exit code: ${status})"
+                        }
+                    }
+                }
+}
                 }
 
                 stage('Integration Tests') {
